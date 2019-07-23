@@ -1,0 +1,47 @@
+version: '3.2'
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+  nginx:
+    image: nginx
+    ports:
+      - '8080:80'
+    volumes:
+      - ./vhost.development.conf:/etc/nginx/conf.d/default.conf
+
+  db:
+    image: postgres:11
+    deploy:
+      placement:
+        constraints:
+          - node.labels.database == true
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    volumes:
+      - dbdata:/var/lib/postgresql/data/pgdata
+
+  web:
+    image: jobsapp
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    depends_on:
+      - db
+
+  cron:
+    image: jobsapp
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    depends_on:
+      - db
+    command: "/bin/sh -c 'whenever --write-crontab && touch /var/log/cron.log && cron && tail -f /var/log/cron.log'"

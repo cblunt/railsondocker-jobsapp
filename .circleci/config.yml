@@ -1,0 +1,77 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:18-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install docker-compose
+          command: |
+            apk add --no-cache py3-pip py3-paramiko
+            pip3 install --no-cache-dir --upgrade pip
+            pip3 install --no-cache-dir "docker-compose==1.24.0"
+
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/jobsapp.tar
+
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/jobsapp.tar | true
+
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build --cache-from=jobsapp -t jobsapp .
+
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/jobsapp.tar jobsapp
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/jobsapp.tar
+      - run:
+          name: Set up database
+          command: |
+            docker-compose -f docker-compose.yml run -e RAILS_ENV=test --rm web bin/rails db:create db:schema:load
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker-compose.yml run -e RAILS_ENV=test --rm web bin/rails test test:system
+      - deploy:
+          name: Push application Docker image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+
+              docker tag jobsapp "${DOCKER_USERNAME}/jobsapp:${CIRCLE_SHA1}"
+              docker tag jobsapp "${DOCKER_USERNAME}/jobsapp:latest"
+
+              docker push ${DOCKER_USERNAME}/jobsapp:${CIRCLE_SHA1}
+              docker push ${DOCKER_USERNAME}/jobsapp:latest
+            fi
+      - run:
+          name: Add SSH keys
+          command: |
+            echo "$SSH_PRIVATE_KEY" | base64 -d > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+      - run:
+          name: Generate SSH known_hosts file
+          command: |
+            echo "$SSH_PUBLIC_HOST_KEY" > ~/.ssh/known_hosts
+      - deploy:
+          name: Run the deploy script
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              sh bin/deploy
+            fi

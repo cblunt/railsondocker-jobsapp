@@ -1,0 +1,9 @@
+.git*
+.git/**
+db/*.sql*
+log/*
+tmp/**
+Dockerfile
+Readme
+docker-compose.yml
+config/master.key
