@@ -1,19 +1,13 @@
-<p id="notice"><%= notice %></p>
+<h1>Application for <%= @job_post.title %></h1>
+
+<p>
+  <strong>Applicant:</strong>
+  <%= @job_application.user.email %>
+</p>
 
 <p>
   <strong>Body:</strong>
   <%= @job_application.body %>
 </p>
 
-<p>
-  <strong>Job post:</strong>
-  <%= @job_application.job_post_id %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @job_application.user_id %>
-</p>
-
-<%= link_to 'Edit', edit_job_application_path(@job_application) %> |
-<%= link_to 'Back', job_applications_path %>
+<%= link_to 'Back', job_post_job_applications_path(@job_post) %>
