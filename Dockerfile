@@ -26,5 +26,4 @@ RUN bundle exec rails assets:precompile
 ENV PORT 3000
 EXPOSE $PORT
 
-# Run the built in Rails server (puma)
-CMD rails s -b 0.0.0.0 -p $PORT
+CMD ./docker-entrypoint.sh
