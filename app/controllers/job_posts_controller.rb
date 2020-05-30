@@ -1,5 +1,7 @@
 class JobPostsController < ApplicationController
   before_action :set_job_post, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, except: [:index, :show]
+  before_action :require_admin, except: [:index, :show]
 
   # GET /job_posts
   # GET /job_posts.json
