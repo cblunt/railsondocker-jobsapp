@@ -101,6 +101,11 @@ GEM
     email_validator (1.6.0)
       activemodel
     erubi (1.9.0)
+    factory_bot (5.1.1)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.1.1)
+      factory_bot (~> 5.1.0)
+      railties (>= 4.2.0)
     ffi (1.12.2)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -121,6 +126,9 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.1)
+    minitest-spec-rails (6.0.2)
+      minitest (>= 5.0)
+      railties (>= 4.1)
     msgpack (1.3.3)
     nio4r (2.5.2)
     nokogiri (1.10.9)
@@ -221,7 +229,9 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   clearance (~> 1.16.1)
+  factory_bot_rails (~> 5.1.1)
   jbuilder (~> 2.7)
+  minitest-spec-rails (~> 6.0.2)
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.1)
@@ -238,4 +248,4 @@ RUBY VERSION
    ruby 2.6.6p146
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
