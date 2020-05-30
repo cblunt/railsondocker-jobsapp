@@ -1,7 +1,0 @@
-#!/bin/sh
-
-DEPLOY_CMD="cd jobsapp \
-  && docker-compose pull web \
-  && docker-compose up -d web"
-
-ssh "$SSH_USER"@"$SSH_HOST" "$DEPLOY_CMD";
