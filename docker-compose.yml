@@ -1,0 +1,30 @@
+# docker-compose.yml
+version: '3.2'
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+  db:
+    image: postgres:11
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    volumes:
+      - dbdata:/var/lib/postgresql/data/pgdata
+
+  web:
+    build: . # Builds the image from Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
