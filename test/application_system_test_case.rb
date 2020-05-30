@@ -22,6 +22,11 @@ Capybara.register_driver :chrome_headless do |app|
   )
 end
 
+# Default Capybara configuration
+Capybara.configure do |config|
+  config.save_path = Rails.root.join('tmp', 'screenshots')
+end
+
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   driven_by :chrome_headless
 end
