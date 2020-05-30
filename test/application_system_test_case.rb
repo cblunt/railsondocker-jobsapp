@@ -28,5 +28,21 @@ Capybara.configure do |config|
 end
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  # Allow use of #fixture_file_upload in system tests
+  include ActionDispatch::TestProcess::FixtureFile
+
   driven_by :chrome_headless
+
+  def fixture_file_path(filename)
+    Rails.root.join('test', 'fixtures', 'files', filename)
+  end
+
+  def remove_uploaded_files
+    FileUtils.rm_rf("#{Rails.root}/tmp/storage")
+  end
+
+  def after_teardown
+    super
+    remove_uploaded_files
+  end
 end
