@@ -4,9 +4,9 @@
       <h2><%= pluralize(job_application.errors.count, "error") %> prohibited this job_application from being saved:</h2>
 
       <ul>
-      <% job_application.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% job_application.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -14,6 +14,11 @@
   <div class="field">
     <%= form.label :body %>
     <%= form.text_area :body %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cv %>
+    <%= form.file_field :cv %>
   </div>
 
   <div class="actions">
