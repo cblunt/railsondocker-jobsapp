@@ -20,7 +20,8 @@ WORKDIR /usr/src/app
 ADD . /usr/src/app
 
 # Precompile assets
-RUN bundle exec rails assets:precompile
+RUN bin/yarn install
+RUN bin/rails assets:precompile
 
 # Install chrome
 RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb \
