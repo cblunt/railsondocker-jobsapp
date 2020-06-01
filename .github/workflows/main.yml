@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - rails6
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and run tests in Docker
+        env:
+          RAILS_ENV: test
+        run: |
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose -f docker-compose.yml -f docker-compose.test.yml build
+            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails db:create db:schema:load
+            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails test
+          else
+            echo "No docker-compose.test.yml file found"
+            exit 1
+          fi
