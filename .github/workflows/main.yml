@@ -4,23 +4,57 @@ on:
   push:
     branches:
       - rails6
+      - github-actions
   pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
+      - name: Cache docker build layers
+        uses: actions/cache@v2
+        with:
+          path: ~/cache
+          key: ${{ runner.os }}-docker-layers
+
       - uses: actions/checkout@v2
+
+      - name: Build application Docker image
+        run: |
+          if [ -d ~/cache/jobsapp.tar ]; then
+            docker load -i ~/cache/jobsapp.tar | true
+            docker build --cache-from=jobsapp -t jobsapp .
+          else
+            docker build -t jobsapp .
+          fi
+
+      - name: Cache the docker image layers
+        run: |
+          mkdir -p ~/caches
+          docker save -o ~/caches/jobsapp.tar jobsapp
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Cache docker build layers
+        uses: actions/cache@v2
+        with:
+          path: ~/cache
+          key: ${{ runner.os }}-docker-layers
+
+      - uses: actions/cache@v2
 
       - name: Build and run tests in Docker
         env:
           RAILS_ENV: test
         run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose -f docker-compose.yml -f docker-compose.test.yml build
-            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails db:create db:schema:load
-            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails test
+          if [ -f docker-compose.yml ]; then
+            docker-compose -f docker-compose.yml build
+            docker-compose -f docker-compose.yml run web bin/rails db:create db:schema:load
+            docker-compose -f docker-compose.yml run web bin/rails test
           else
-            echo "No docker-compose.test.yml file found"
+            echo "No docker-compose.yml file found"
             exit 1
           fi
