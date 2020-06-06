@@ -44,7 +44,7 @@ jobs:
           path: ~/cache
           key: ${{ runner.os }}-docker-layers
 
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v2
 
       - name: Build and run tests in Docker
         env:
