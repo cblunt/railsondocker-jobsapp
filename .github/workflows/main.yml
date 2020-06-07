@@ -15,14 +15,14 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ~/cache
+          path: .cache
           key: ${{ runner.os }}-docker-layers
 
       - name: Show the contents of the cache
         run: |
-          ls -la ~/cache
+          ls -la .cache
 
-          if [ -f ~/cache/jobsapp.tar ]; then
+          if [ -f .cache/jobsapp.tar ]; then
             echo "Cache hit"
           else
             echo "No cache found"
@@ -31,21 +31,20 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: cache
 
     steps:
       - name: Cache docker build layers
         uses: actions/cache@v2
         with:
-          path: ~/cache
+          path: .cache
           key: ${{ runner.os }}-docker-layers
 
       - uses: actions/checkout@v2
 
       - name: Build application Docker image
         run: |
-          if [ -f ~/cache/jobsapp.tar ]; then
-            docker load -i ~/cache/jobsapp.tar | true
+          if [ -f .cache/jobsapp.tar ]; then
+            docker load -i .cache/jobsapp.tar | true
             docker build --cache-from=jobsapp -t jobsapp:test .
           else
             docker build -t jobsapp:test .
@@ -63,8 +62,8 @@ jobs:
 
       - name: Cache the docker image layers
         run: |
-          mkdir -p ~/caches
-          docker save -o ~/caches/jobsapp.tar jobsapp
+          mkdir -p .caches
+          docker save -o .caches/jobsapp.tar jobsapp
 
   build:
     needs: test
@@ -75,15 +74,15 @@ jobs:
       - name: Cache docker build layers
         uses: actions/cache@v2
         with:
-          path: ~/cache
+          path: .cache
           key: ${{ runner.os }}-docker-layers
 
       - uses: actions/checkout@v2
 
       - name: Build application Docker image
         run: |
-          if [ -f ~/cache/jobsapp.tar ]; then
-            docker load -i ~/cache/jobsapp.tar | true
+          if [ -f .cache/jobsapp.tar ]; then
+            docker load -i .cache/jobsapp.tar | true
             docker build --cache-from=jobsapp -t jobsapp .
           else
             docker build -t jobsapp .
@@ -91,5 +90,5 @@ jobs:
 
       - name: Cache the docker image layers
         run: |
-          mkdir -p ~/caches
-          docker save -o ~/caches/jobsapp.tar jobsapp
+          mkdir -p .caches
+          docker save -o .caches/jobsapp.tar jobsapp
