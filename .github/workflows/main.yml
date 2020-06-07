@@ -33,20 +33,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Cache docker build layers
         uses: actions/cache@v2
         with:
           path: .cache
           key: ${{ runner.os }}-docker-layers
 
-      - uses: actions/checkout@v2
-
       - name: Build application Docker image
         run: |
           if [ -f .cache/jobsapp.tar ]; then
+            echo "Cache hit"
             docker load -i .cache/jobsapp.tar | true
             docker build --cache-from=jobsapp -t jobsapp:test .
           else
+            echo "Cache missed"
             docker build -t jobsapp:test .
           fi
 
