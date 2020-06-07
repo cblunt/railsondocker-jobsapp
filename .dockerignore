@@ -1,4 +1,3 @@
-.cache/
 .git*
 .git/**
 db/*.sql*
