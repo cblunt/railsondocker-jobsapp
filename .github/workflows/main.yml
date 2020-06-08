@@ -32,8 +32,6 @@ jobs:
 
       - name: Build and run tests in Docker
         run: |
-          ls -la ~/.cache
-          
           if [ -f docker-compose.test.yml ]; then
             docker-compose -f docker-compose.yml -e RAILS_ENV=test run web bin/rails db:create db:schema:load
             docker-compose -f docker-compose.yml -e RAILS_ENV=test run web bin/rails test
