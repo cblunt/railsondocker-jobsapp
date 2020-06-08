@@ -5,6 +5,7 @@ on:
     branches:
       - rails6
       - github-actions
+      - all
   pull_request:
 
 jobs:
