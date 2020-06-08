@@ -5,7 +5,6 @@ on:
     branches:
       - rails6
       - github-actions
-      - all
   pull_request:
 
 jobs:
@@ -17,13 +16,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache
-          key: ${{ runner.os }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
 
       - uses: actions/checkout@v2
 
       - name: Build application Docker image
         run: |
           if [ -f ~/.cache/jobsapp.tar ]; then
+            ls -la ~/.cache
             docker load -i ~/.cache/jobsapp.tar
             docker build --cache-from=jobsapp -t jobsapp .
           else
@@ -32,9 +32,11 @@ jobs:
 
       - name: Build and run tests in Docker
         run: |
+          ls -la ~/.cache
+          
           if [ -f docker-compose.test.yml ]; then
-            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails db:create db:schema:load
-            docker-compose -f docker-compose.yml -f docker-compose.test.yml run web bin/rails test
+            docker-compose -f docker-compose.yml -e RAILS_ENV=test run web bin/rails db:create db:schema:load
+            docker-compose -f docker-compose.yml -e RAILS_ENV=test run web bin/rails test
           else
             echo "No docker-compose.test.yml file found"
             exit 1
@@ -44,6 +46,7 @@ jobs:
         run: |
           mkdir -p ~/.cache
           docker save -o ~/.cache/jobsapp.tar jobsapp
+          ls -la ~/.cache
 
   build:
     needs: test
@@ -55,13 +58,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache
-          key: ${{ runner.os }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
 
       - uses: actions/checkout@v2
 
       - name: Build application Docker image
         run: |
           if [ -f ~/.cache/jobsapp.tar ]; then
+            ls -la ~/.cache
             docker load -i ~/.cache/jobsapp.tar
             docker build --cache-from=jobsapp -t jobsapp .
           else
@@ -80,12 +84,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache
-          key: ${{ runner.os }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
 
       - uses: actions/checkout@v2
 
       - name: Publish application Docker image
         run: |
+          ls -la ~/.cache
+          
           if [ -f ~/.cache/jobsapp.tar ]; then
             docker load -i ~/.cache/jobsapp.tar
             docker build --cache-from=jobsapp -t jobsapp .
