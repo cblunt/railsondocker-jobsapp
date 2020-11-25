@@ -93,5 +93,5 @@ jobs:
             registry: ghcr.io
             repository: cblunt/jobsapp
             cache_froms: jobsapp
-            tag_with_ref: true
+            tags: latest
             tag_with_sha: true
