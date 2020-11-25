@@ -3,6 +3,6 @@ version: '3.2'
 
 services:
   web:
-    image: jobsapp:test
+    image: jobsapp
     environment:
       - RAILS_ENV=test
