@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           push: false
-          repository: cblunt/jobsapp
+          repository: jobsapp
           tags: latest
 
       - name: Run tests in Docker
