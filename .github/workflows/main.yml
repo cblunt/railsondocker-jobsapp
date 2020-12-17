@@ -7,27 +7,57 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache docker build layers
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
         uses: actions/cache@v2
         with:
-          path: ~/.cache
+          path: /tmp/docker-cache
           key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          restore-keys: |
+            ${{ runner.os }}-${{ github.repository }}-docker-layers
 
       - uses: actions/checkout@v2
 
-      - name: Load image layers from cache
-        run: |
-          if [ -f ~/.cache/jobsapp.tar ]; then
-            docker load -i ~/.cache/jobsapp.tar
-          fi
+      - name: Build and cache Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: cblunt/jobsapp:latest
+          cache-from: type=local,src=/tmp/docker-cache
+          cache-to: type=local,dest=/tmp/docker-cache,mode=max
 
-      - name: Build the Docker image
-        run: |
-          docker build -t jobsapp:latest .
+  test:
+    needs:
+      - build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/docker-cache
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          restore-keys: |
+            ${{ runner.os }}-${{ github.repository }}-docker-layers
+
+      - uses: actions/checkout@v2
+
+      - name: Build and cache Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: cblunt/jobsapp:latest
+          cache-from: type=local,src=/tmp/docker-cache
 
       - name: Run tests in Docker
         run: |
@@ -39,39 +69,40 @@ jobs:
               exit 1
             fi
 
-      - name: Cache the docker image layers
-        run: |
-          mkdir -p ~/.cache
-          docker save -o ~/.cache/jobsapp.tar jobsapp
-
   publish:
     runs-on: ubuntu-latest
 
     needs:
+      - build
       - test
 
     steps:
-      - name: Cache docker build layers
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
         uses: actions/cache@v2
         with:
-          path: ~/.cache
+          path: /tmp/docker-cache
           key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          restore-keys: |
+            ${{ runner.os }}-${{ github.repository }}-docker-layers
 
       - uses: actions/checkout@v2
 
-      - name: Load image layers from cache
-        run: |
-          if [ -f ~/.cache/jobsapp.tar ]; then
-            docker load -i ~/.cache/jobsapp.tar
-          fi
-
-      - name: Publish to Github Container Registry
-        uses: docker/build-push-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-            username: ${{ github.actor }}
-            password: ${{ secrets.GCR_PASSWORD }}
-            registry: ghcr.io
-            repository: cblunt/jobsapp
-            cache_froms: jobsapp
-            tags: latest
-            tag_with_sha: true
+          registry: ghcr.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and publish Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            cblunt/jobsapp:${{ github.sha }}
+            cblunt/jobsapp:latest
+          cache-from: type=local,src=/tmp/docker-cache
+          cache-to: type=local,dest=/tmp/docker-cache,mode=max
