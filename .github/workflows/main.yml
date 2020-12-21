@@ -114,7 +114,7 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/cblunt/jobsapp:${{ github.sha }}
-            ghcr.io/cblunt/jobsapp:latest
+            ghcr.io/${{ github.actor }}/jobsapp:${{ github.sha }}
+            ghcr.io/${{ github.actor }}/jobsapp:latest
           cache-from: type=local,src=/tmp/docker-cache
           cache-to: type=local,dest=/tmp/docker-cache,mode=max
