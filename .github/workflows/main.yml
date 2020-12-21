@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/docker-cache
-          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ github.repository }}-docker-layers
 
@@ -50,9 +50,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/docker-cache
-          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ github.repository }}-docker-layers
+            ${{ runner.os }}-${{ github.repository }}-docker-layers-
 
       - name: List cache
         run: ls -la /tmp/docker-cache
@@ -66,6 +66,7 @@ jobs:
           load: true
           tags: jobsapp:latest
           cache-from: type=local,src=/tmp/docker-cache
+          cache-to: type=local,dest=/tmp/docker-cache,mode=max
 
       - name: Run tests in Docker
         run: |
@@ -92,9 +93,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/docker-cache
-          key: ${{ runner.os }}-${{ github.repository }}-docker-layers
+          key: ${{ runner.os }}-${{ github.repository }}-docker-layers-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ github.repository }}-docker-layers
+            ${{ runner.os }}-${{ github.repository }}-docker-layers-
 
       - name: List cache
         run: ls -la /tmp/docker-cache
@@ -115,5 +116,5 @@ jobs:
           tags: |
             ghcr.io/cblunt/jobsapp:${{ github.sha }}
             ghcr.io/cblunt/jobsapp:latest
-          cache-from: type=local,src=/tmp/docker-cache
+          cache-from: type=local,dest=/tmp/docker-cache
           cache-to: type=local,dest=/tmp/docker-cache,mode=max
