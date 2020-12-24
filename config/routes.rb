@@ -1,7 +1,3 @@
 Rails.application.routes.draw do
-  resources :job_posts do
-    resources :job_applications
-  end
-
-  root to: redirect("/job_posts")
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
