@@ -17,15 +17,15 @@ services:
     volumes:
       - .:/usr/src/app
 
-  # guard:
-  #   build: .
-  #   environment:
-  #     - RAILS_ENV=development
-  #     - RACK_ENV=development
-  #     - POSTGRES_USER=rails
-  #     - POSTGRES_PASSWORD=secret123
-  #   volumes:
-  #     - .:/usr/src/app
-  #   depends_on:
-  #     - db
-  #   command: bundle exec guard --no-bundler-warning --no-interactions
+  guard:
+    build: .
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+    command: bundle exec guard --no-bundler-warning --no-interactions
