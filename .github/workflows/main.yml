@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - rails6
-      - github-actions-deploy
+
   pull_request:
 
 jobs:
