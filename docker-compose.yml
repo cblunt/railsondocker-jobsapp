@@ -24,3 +24,14 @@ services:
       - POSTGRES_PASSWORD=secret123
     depends_on:
       - db
+
+  cron:
+    image: jobsapp
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    depends_on:
+      - db
+    command: "/bin/sh -c 'whenever --write-crontab && touch /var/log/cron.log && cron && tail -f /var/log/cron.log'"
