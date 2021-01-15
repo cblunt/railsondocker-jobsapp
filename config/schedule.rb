@@ -24,8 +24,3 @@ set :output, "/var/log/cron.log"
 every 1.minute do
   command "echo 'I am a scheduled task'"
 end
-
-# Example to send email notifications through a rake task
-# every 1.day, at: '10:00 pm' do
-#   rake "app:send_email_notifications"
-# end

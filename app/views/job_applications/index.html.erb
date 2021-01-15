@@ -14,7 +14,6 @@
       <tr>
         <td><%= job_application.body %></td>
         <td><%= job_application.user.email %></td>
-
         <td><%= link_to 'Show', job_post_job_application_path(@job_post, job_application) %></td>
         <td><%= link_to 'Destroy', job_post_job_application_path(@job_post, job_application), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

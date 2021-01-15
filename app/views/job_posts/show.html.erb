@@ -8,9 +8,9 @@
   <%= @job_post.body %>
 </p>
 
+<%= link_to 'Edit', edit_job_post_path(@job_post) %> |
+<%= link_to 'Back', job_posts_path %>
+
 <p>
   <%= link_to "Apply Now", new_job_post_job_application_path(@job_post) %>
 </p>
-
-<%= link_to 'Edit', edit_job_post_path(@job_post) %> |
-<%= link_to 'Back', job_posts_path %>

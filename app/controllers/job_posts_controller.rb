@@ -1,13 +1,16 @@
 class JobPostsController < ApplicationController
+  before_action :set_job_post, only: [:show, :edit, :update, :destroy]
   before_action :require_login, except: [:index, :show]
   before_action :require_admin, except: [:index, :show]
 
-  before_action :set_job_post, only: [:show, :edit, :update, :destroy]
-
+  # GET /job_posts
+  # GET /job_posts.json
   def index
     @job_posts = JobPost.all
   end
 
+  # GET /job_posts/1
+  # GET /job_posts/1.json
   def show
   end
 
@@ -66,7 +69,7 @@ class JobPostsController < ApplicationController
       @job_post = JobPost.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # Only allow a list of trusted parameters through.
     def job_post_params
       params.require(:job_post).permit(:title, :body)
     end

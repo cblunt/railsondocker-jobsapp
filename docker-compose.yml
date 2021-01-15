@@ -1,3 +1,4 @@
+# docker-compose.yml
 version: '3.2'
 
 volumes:
@@ -5,19 +6,8 @@ volumes:
     driver: local
 
 services:
-  nginx:
-    image: nginx
-    ports:
-      - '8080:80'
-    volumes:
-      - ./vhost.development.conf:/etc/nginx/conf.d/default.conf
-
   db:
     image: postgres:11
-    deploy:
-      placement:
-        constraints:
-          - node.labels.database == true
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=rails
@@ -32,8 +22,10 @@ services:
       - RACK_ENV=development
       - POSTGRES_USER=rails
       - POSTGRES_PASSWORD=secret123
+      - HUB_URL=http://chrome:4444
     depends_on:
       - db
+      - chrome
 
   cron:
     image: jobsapp
@@ -45,3 +37,9 @@ services:
     depends_on:
       - db
     command: "/bin/sh -c 'whenever --write-crontab && touch /var/log/cron.log && cron && tail -f /var/log/cron.log'"
+
+  chrome:
+    # image: selenium/standalone-chrome:3.142.7-zirconium # this version should match that of the selenium-webdriver gem (see Gemfile)
+    image: selenium/standalone-chrome:4.0.0-beta-1-prerelease-20210106
+    volumes:
+      - /dev/shm:/dev/shm

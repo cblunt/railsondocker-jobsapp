@@ -1,69 +1,69 @@
-require "application_system_test_case"
+require 'application_system_test_case'
 
 class JobPostsTest < ApplicationSystemTestCase
   let(:admin) { FactoryBot.create(:user, :admin) }
 
-  describe "public user not signed in" do
+  describe 'public user not signed in' do
     setup do
       FactoryBot.create(:job_post)
     end
 
-    test "viewing job posts" do
+    test 'viewing job posts' do
       visit job_posts_url
 
-      assert_text "Job Posts"
-      assert_text "A Job Post"
+      assert_text 'Job Posts'
+      assert_text 'A Job Post'
 
-      click_on "Show"
+      click_on 'Show'
 
-      click_on "Apply Now"
+      click_on 'Apply Now'
 
-      assert_text "Sign in"
+      assert_text 'Sign in'
     end
   end
 
-  test "creating a Job Post" do
+  test 'creating a Job Post' do
     visit job_posts_url(as: admin)
 
-    click_on "New Job Post"
+    click_on 'New Job Post'
 
-    fill_in "Title", with: "A Job Post"
-    fill_in "Body", with: "Work for us at our company."
+    fill_in 'Title', with: 'A Job Post'
+    fill_in 'Body', with: 'Work for us at our company.'
 
-    click_on "Create Job post"
+    click_on 'Create Job post'
 
-    assert_text "Job post was successfully created"
-    click_on "Back"
+    assert_text 'Job post was successfully created'
+    click_on 'Back'
   end
 
-  describe "modifying a job post" do
+  describe 'modifying a job post' do
     setup do
       FactoryBot.create(:job_post)
     end
 
-    test "updating a Job post" do
+    test 'updating a Job post' do
       visit job_posts_url(as: admin)
 
-      click_on "Edit"
+      click_on 'Edit'
 
-      fill_in "Title", with: "An Updated Job"
-      fill_in "Body", with: "We're updating the job post"
+      fill_in 'Title', with: 'An Updated Job'
+      fill_in 'Body', with: "We're updating the job post"
 
-      click_on "Update Job post"
+      click_on 'Update Job post'
 
-      assert_text "Job post was successfully updated"
+      assert_text 'Job post was successfully updated'
 
-      click_on "Back"
+      click_on 'Back'
     end
 
-    test "destroying a Job post" do
+    test 'destroying a Job post' do
       visit job_posts_url(as: admin)
 
       page.accept_confirm do
-        click_on "Destroy"
+        click_on 'Destroy'
       end
 
-      assert_text "Job post was successfully destroyed"
+      assert_text 'Job post was successfully destroyed'
     end
   end
 end

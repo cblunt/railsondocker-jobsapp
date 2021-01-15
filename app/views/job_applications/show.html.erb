@@ -13,7 +13,7 @@
 <% if @job_application.cv.attached? %>
   <p>
     <strong>Attached CV</strong>
-    <%= link_to "Download", rails_blob_path(@job_application.cv, disposition: "attachment") %>
+    <%= link_to 'Download', rails_blob_path(@job_application.cv, disposition: 'attachment') %>
   </p>
 <% end %>
 

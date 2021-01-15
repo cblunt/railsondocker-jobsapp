@@ -66,16 +66,16 @@ class JobApplicationsController < ApplicationController
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
     def set_job_post
       @job_post = JobPost.find(params[:job_post_id])
     end
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_job_application
-      @job_application = JobApplication.find(params[:id])
+      @job_application = @job_post.job_applications.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # Only allow a list of trusted parameters through.
     def job_application_params
       params.require(:job_application).permit(:body, :cv)
     end

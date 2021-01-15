@@ -4,9 +4,9 @@
       <h2><%= pluralize(job_post.errors.count, "error") %> prohibited this job_post from being saved:</h2>
 
       <ul>
-      <% job_post.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% job_post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
