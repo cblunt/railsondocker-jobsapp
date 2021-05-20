@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:2.6.7
 
 # Prerequisites
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
