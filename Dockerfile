@@ -22,5 +22,5 @@ ENV PORT 3000
 
 EXPOSE $PORT
 
-# Run the built in Rails server (puma)
-CMD rails s -b 0.0.0.0 -p $PORT
+# Run the docker-entrypoint file
+CMD ./docker-entrypoint.sh
