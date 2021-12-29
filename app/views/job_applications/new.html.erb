@@ -1,9 +1,5 @@
-<h1>New job application</h1>
+<h1>Apply for <%= @job_post.title %></h1>
 
 <%= render "form", job_application: @job_application %>
 
-<br>
-
-<div>
-  <%= link_to "Back to job applications", job_applications_path %>
-</div>
+<%= link_to 'Back to job applications', job_post_job_applications_path(@job_post) %>
