@@ -7,6 +7,12 @@
     <%= render job_post %>
     <p>
       <%= link_to "Show this job post", job_post %>
+
+      <% if current_user&.admin? %>
+        <%= link_to 'Applications', job_post_job_applications_path(job_post) %>
+        <%= link_to 'Edit', edit_job_post_path(job_post) %>
+        <%= link_to 'Destroy', job_post, method: :delete %>
+      <% end %>
     </p>
   <% end %>
 </div>

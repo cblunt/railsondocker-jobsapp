@@ -25,12 +25,13 @@ class JobApplicationsController < ApplicationController
 
   # POST /job_applications or /job_applications.json
   def create
-    @job_application = @job_post.job_applications.new(job_application_params)
+    @job_application = current_user.job_applications.new(job_application_params)
+    @job_application.job_post = @job_post
 
     respond_to do |format|
       if @job_application.save
-        format.html { redirect_to job_application_url(@job_application), notice: "Job application was successfully created." }
-        format.json { render :show, status: :created, location: @job_application }
+        format.html { redirect_to @job_post, notice: "Job application was successfully created." }
+        format.json { render :show, status: :created, location: @job_post }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @job_application.errors, status: :unprocessable_entity }
@@ -42,8 +43,8 @@ class JobApplicationsController < ApplicationController
   def update
     respond_to do |format|
       if @job_application.update(job_application_params)
-        format.html { redirect_to job_application_url(@job_application), notice: "Job application was successfully updated." }
-        format.json { render :show, status: :ok, location: @job_application }
+        format.html { redirect_to @job_post, notice: "Job application was successfully updated." }
+        format.json { render :show, status: :ok, location: @job_post }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @job_application.errors, status: :unprocessable_entity }
@@ -56,7 +57,7 @@ class JobApplicationsController < ApplicationController
     @job_application.destroy
 
     respond_to do |format|
-      format.html { redirect_to job_applications_url, notice: "Job application was successfully destroyed." }
+      format.html { redirect_to @job_post, notice: "Job application was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -73,6 +74,6 @@ class JobApplicationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def job_application_params
-      params.require(:job_application).permit(:body, :job_post_id)
+      params.require(:job_application).permit(:body)
     end
 end

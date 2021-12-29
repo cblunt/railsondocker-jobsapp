@@ -1,10 +1,12 @@
 <p style="color: green"><%= notice %></p>
 
+<h1>Application for <%= @job_post.title %></h1>
+
 <%= render @job_application %>
 
 <div>
-  <%= link_to "Edit this job application", edit_job_application_path(@job_application) %> |
-  <%= link_to "Back to job applications", job_applications_path %>
+  <%= link_to "Edit this job application", edit_job_post_job_application_path(@job_post, @job_application) %> |
+  <%= link_to "Back to job applications", job_post_job_applications_path(@job_post) %>
 
-  <%= button_to "Destroy this job application", @job_application, method: :delete %>
+  <%= button_to "Destroy this job application", job_post_job_application_path(@job_post, @job_application), method: :delete %>
 </div>

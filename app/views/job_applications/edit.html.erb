@@ -5,6 +5,6 @@
 <br>
 
 <div>
-  <%= link_to "Show this job application", @job_application %> |
-  <%= link_to "Back to job applications", job_applications_path %>
+  <%= link_to "Show this job application", job_post_job_application_path(@job_post, @job_application) %> |
+  <%= link_to "Back to job applications", job_post_job_applications_path(@job_post) %>
 </div>
