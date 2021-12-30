@@ -4,6 +4,13 @@
 
 <%= render @job_application %>
 
+<% if @job_application.cv.attached? %>
+  <p>
+    <strong>Attached CV</strong>
+    <%= link_to 'Download', rails_blob_path(@job_application.cv, disposition: 'attachment') %>
+  </p>
+<% end %>
+
 <div>
   <%= link_to "Edit this job application", edit_job_post_job_application_path(@job_post, @job_application) %> |
   <%= link_to "Back to job applications", job_post_job_applications_path(@job_post) %>
