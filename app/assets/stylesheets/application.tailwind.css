@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#job_posts {
+  @apply bg-green-500;
+}
