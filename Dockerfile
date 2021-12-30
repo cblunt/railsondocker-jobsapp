@@ -25,7 +25,7 @@ WORKDIR /usr/src/app
 ADD . /usr/src/app
 
 # Precompile assets
-# RUN bin/rails assets:precompile
+RUN bin/rails assets:precompile
 
 # Expose port 3000 to other containers (Note: not external devices such as our workstation)
 ENV PORT 3000
