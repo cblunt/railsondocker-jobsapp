@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-#job_posts {
-  @apply bg-green-500;
+@layer base {
+  h1 {
+    @apply text-2xl;
+    @apply pb-3;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  p {
+    @apply my-3;
+  }
+
+  a, a:link, a:visited {
+    @apply text-blue-600;
+    @apply transition-colors;
+  }
+
+  a:hover, a:focus {
+    @apply text-green-600;
+  }
+
+  [type=text],
+  [type=email],
+  [type=password],
+  textarea {
+    @apply border;
+    @apply rounded;
+    @apply px-1;
+  }
+}
+
+@layer components {
+  button,
+  [type=submit],
+  [type=button] {
+    @apply bg-blue-500;
+    @apply px-2;
+    @apply py-1;
+    @apply rounded;
+    @apply text-white;
+    @apply transition-colors;
+  }
+}
+
+.text-field > label,
+.password-field > label {
+  @apply inline-block;
+  @apply w-24;
+  @apply mb-3;
 }
