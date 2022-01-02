@@ -37,3 +37,17 @@ services:
     volumes:
       - .:/usr/src/app
     command: yarn build:css --watch
+
+  guard:
+    build: .
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    tty: true
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+    command: bundle exec guard
