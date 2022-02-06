@@ -13,6 +13,10 @@ class JobPostsTest < ApplicationSystemTestCase
 
     click_on 'Create Job post'
 
+    save_screenshot
+
     expect(text).must_match(/Job post was successfully created/)
+
+    click_on 'Back'
   end
 end
