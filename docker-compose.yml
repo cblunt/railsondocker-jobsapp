@@ -15,43 +15,23 @@ services:
       - dbdata:/var/lib/postgresql/data/pgdata
 
   web:
-    build: . # Builds the image from Dockerfile
-    ports:
-      - '3000:3000'
+    image: jobsapp
     environment:
       - RAILS_ENV=development
       - RACK_ENV=development
       - POSTGRES_USER=rails
       - POSTGRES_PASSWORD=secret123
       - HUB_URL=http://chrome:4444
-    volumes:
-      - .:/usr/src/app
     depends_on:
       - db
 
   css:
-    build: . # Use the same application image for this container
+    image: jobsapp # Use the same application image for this container
     environment:
       - RAILS_ENV=development
       - RACK_ENV=development
     tty: true
-    volumes:
-      - .:/usr/src/app
     command: yarn build:css --watch
-
-  guard:
-    build: .
-    environment:
-      - RAILS_ENV=development
-      - RACK_ENV=development
-      - POSTGRES_USER=rails
-      - POSTGRES_PASSWORD=secret123
-    tty: true
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - db
-    command: bundle exec guard
 
   chrome:
     image: selenium/standalone-chrome
