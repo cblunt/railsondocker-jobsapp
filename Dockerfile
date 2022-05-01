@@ -24,6 +24,9 @@ WORKDIR /usr/src/app
 # Copy app code into the image
 ADD . /usr/src/app
 
+# Install Node Modules
+RUN npm install
+
 # Precompile assets
 RUN bin/rails assets:precompile
 
