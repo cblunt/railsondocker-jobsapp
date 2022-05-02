@@ -37,3 +37,14 @@ services:
     image: selenium/standalone-chrome
     volumes:
       - /dev/shm:/dev/shm
+
+  cron:
+    image: jobsapp # Use the same application image for this container
+    environment:
+      - RAILS_ENV=development
+      - RACK_ENV=development
+      - POSTGRES_USER=rails
+      - POSTGRES_PASSWORD=secret123
+    depends_on:
+      - db
+    command: "/bin/sh -c 'whenever --write-crontab && touch /var/log/cron.log && cron && tail -f /var/log/cron.log'"

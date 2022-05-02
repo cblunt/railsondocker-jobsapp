@@ -31,3 +31,8 @@ services:
     depends_on:
       - db
     command: bundle exec guard
+
+  cron:
+    build: .
+    volumes:
+      - .:/usr/src/app
