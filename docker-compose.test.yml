@@ -1,8 +1,6 @@
-# docker-compose.override.yml
-version: '3.2'
+version: '3.8'
 
 services:
   web:
-    image: jobsapp
     environment:
       - RAILS_ENV=test

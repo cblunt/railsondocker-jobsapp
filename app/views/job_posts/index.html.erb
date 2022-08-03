@@ -1,30 +1,22 @@
-<h1>Job Posts</h1>
+<h1>Job posts</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Body</th>
-      <th colspan="4"></th>
-    </tr>
-  </thead>
+<div id="job_posts">
+  <% @job_posts.each do |job_post| %>
 
-  <tbody>
-    <% @job_posts.each do |job_post| %>
-      <tr>
-        <td><%= job_post.title %></td>
-        <td><%= job_post.body %></td>
-        <td><%= link_to 'Show', job_post %></td>
-        <% if current_user&.admin? %>
-          <td><%= link_to 'Applications', job_post_job_applications_path(job_post) %></td>
-          <td><%= link_to 'Edit', edit_job_post_path(job_post) %></td>
-          <td><%= link_to 'Destroy', job_post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-        </tr>
-    <% end %>
-  </tbody>
-</table>
+    <%= render job_post %>
 
-<br>
+    <p>
+      <%= link_to "Show this job post", job_post %>
 
-<%= link_to 'New Job Post', new_job_post_path %>
+      <% if current_user&.admin? %>
+        <%= link_to 'Applications', job_post_job_applications_path(job_post) %>
+        <%= link_to 'Edit', edit_job_post_path(job_post) %>
+        <%= link_to 'Destroy', job_post, method: :delete %>
+      <% end %>
+    </p>
+
+    <hr class="mb-3" />
+  <% end %>
+</div>
+
+<%= link_to "New job post", new_job_post_path %>

@@ -2,30 +2,22 @@ require "test_helper"
 
 Capybara.register_driver :chrome_headless do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    loggingPrefs: {
-      browser: "ALL",
-      client: "ALL",
-      driver: "ALL",
-      server: "ALL"
+    'goog:chromeOptions': {
+      args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage]
     }
   )
 
-  options = Selenium::WebDriver::Chrome::Options.new(
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage]
-  )
-
-  if ENV['HUB_URL']
+  if ENV["HUB_URL"]
     Capybara::Selenium::Driver.new(app,
-                                  browser: :remote,
-                                  url: ENV['HUB_URL'],
-                                  desired_capabilities: capabilities,
-                                  options: options)
-
+      browser: :remote,
+      url: ENV["HUB_URL"],
+      capabilities: capabilities,
+    )
   else
+    # Fall back to default
     Capybara::Selenium::Driver.new(app,
                                   browser: :chrome,
-                                  desired_capabilities: capabilities,
-                                  options: options)
+                                  capabilities: capabilities)
   end
 end
 
@@ -35,29 +27,14 @@ Capybara.configure do |config|
 end
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  # Allow use of #fixture_file_upload in system tests
-  include ActionDispatch::TestProcess::FixtureFile
-
   driven_by :chrome_headless
 
   def setup
+    # Fetch the IP address of the container running the specs.
     ip_address = Socket.ip_address_list.select { |addr| addr.ipv4_private? && !addr.ipv4_loopback? }.first.ip_address
 
     Capybara.app_host = "http://#{ip_address}"
-    Capybara.server_host = ip_address
+    Capybara.server_host = "0.0.0.0"
     Capybara.always_include_port = true
-  end
-
-  def fixture_file_path(filename)
-    Rails.root.join('test', 'fixtures', 'files', filename)
-  end
-
-  def remove_uploaded_files
-    FileUtils.rm_rf("#{Rails.root}/tmp/storage")
-  end
-
-  def after_teardown
-    super
-    remove_uploaded_files
   end
 end

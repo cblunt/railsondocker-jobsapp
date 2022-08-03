@@ -2,27 +2,33 @@
 <html>
   <head>
     <title>Jobsapp</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
 
   <body>
-    <% if signed_in? %>
-      Signed in as: <%= current_user.email %>
-      <%= button_to 'Sign out', sign_out_path, method: :delete %>
-    <% else %>
-      <%= link_to 'Sign in', sign_in_path %>
-    <% end %>
+    <header class="bg-gray-50 p-6">
+      <nav class="w-full">
+        <% if signed_in? %>
+          Signed in as: <%= current_user.email %>
+          <%= button_to 'Sign out', sign_out_path, method: :delete %>
+        <% else %>
+          <%= link_to 'Sign in', sign_in_path %>
+        <% end %>
+      </nav>
+    </header>
 
-    <div id="flash">
+    <div id="flash" class="w-full">
       <% flash.each do |key, value| %>
-        <div class="flash <%= key %>"><%= value %></div>
+        <div class="flash <%= key %> py-3 px-6 bg-yellow-200"><%= value %></div>
       <% end %>
     </div>
 
-    <%= yield %>
+    <main class="w-full py-3 px-6">
+      <%= yield %>
+    </main>
   </body>
 </html>

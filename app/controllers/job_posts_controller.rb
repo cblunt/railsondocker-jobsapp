@@ -1,16 +1,14 @@
 class JobPostsController < ApplicationController
-  before_action :set_job_post, only: [:show, :edit, :update, :destroy]
   before_action :require_login, except: [:index, :show]
   before_action :require_admin, except: [:index, :show]
+  before_action :set_job_post, only: %i[ show edit update destroy ]
 
-  # GET /job_posts
-  # GET /job_posts.json
+  # GET /job_posts or /job_posts.json
   def index
     @job_posts = JobPost.all
   end
 
-  # GET /job_posts/1
-  # GET /job_posts/1.json
+  # GET /job_posts/1 or /job_posts/1.json
   def show
   end
 
@@ -23,42 +21,40 @@ class JobPostsController < ApplicationController
   def edit
   end
 
-  # POST /job_posts
-  # POST /job_posts.json
+  # POST /job_posts or /job_posts.json
   def create
     @job_post = JobPost.new(job_post_params)
 
     respond_to do |format|
       if @job_post.save
-        format.html { redirect_to @job_post, notice: 'Job post was successfully created.' }
+        format.html { redirect_to job_post_url(@job_post), notice: "Job post was successfully created." }
         format.json { render :show, status: :created, location: @job_post }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @job_post.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /job_posts/1
-  # PATCH/PUT /job_posts/1.json
+  # PATCH/PUT /job_posts/1 or /job_posts/1.json
   def update
     respond_to do |format|
       if @job_post.update(job_post_params)
-        format.html { redirect_to @job_post, notice: 'Job post was successfully updated.' }
+        format.html { redirect_to job_post_url(@job_post), notice: "Job post was successfully updated." }
         format.json { render :show, status: :ok, location: @job_post }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @job_post.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /job_posts/1
-  # DELETE /job_posts/1.json
+  # DELETE /job_posts/1 or /job_posts/1.json
   def destroy
     @job_post.destroy
+
     respond_to do |format|
-      format.html { redirect_to job_posts_url, notice: 'Job post was successfully destroyed.' }
+      format.html { redirect_to job_posts_url, notice: "Job post was successfully destroyed." }
       format.json { head :no_content }
     end
   end

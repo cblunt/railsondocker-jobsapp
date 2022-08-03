@@ -1,6 +1,10 @@
-<h1>Editing Job Application</h1>
+<h1>Editing job application</h1>
 
-<%= render 'form', job_application: @job_application %>
+<%= render "form", job_application: @job_application %>
 
-<%= link_to 'Show', job_post_job_application_path(@job_post, @job_application) %> |
-<%= link_to 'Back', job_post_job_applications_path(@job_post) %>
+<br>
+
+<div>
+  <%= link_to "Show this job application", job_post_job_application_path(@job_post, @job_application) %> |
+  <%= link_to "Back to job applications", job_post_job_applications_path(@job_post) %>
+</div>

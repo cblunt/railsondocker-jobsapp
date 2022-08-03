@@ -1,10 +1,15 @@
-FROM ruby:2.6
+# syntax=docker/dockerfile:1.3-labs
+FROM ruby:2.7
 
-# Prerequisites
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update -q \
-    && apt-get install -y nodejs yarn cron
+# Install NodeJS and YARN
+RUN <<EOF
+curl -fsSL https://deb.nodesource.com/setup_17.x | bash -
+apt-get install -y nodejs
+
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
+apt-get update && apt-get install -y yarn cron
+EOF
 
 # Cache Gems
 WORKDIR /tmp
@@ -14,17 +19,21 @@ ADD Gemfile.lock .
 
 RUN bundle install
 
-# Copy App
 WORKDIR /usr/src/app
 
+# Copy app code into the image
 ADD . /usr/src/app
 
+# Install Node Modules
+RUN npm install
+
 # Precompile assets
-RUN bin/yarn install
 RUN bin/rails assets:precompile
 
 # Expose port 3000 to other containers (Note: not external devices such as our workstation)
 ENV PORT 3000
+
 EXPOSE $PORT
 
+# Run the docker-entrypoint file
 CMD ./docker-entrypoint.sh

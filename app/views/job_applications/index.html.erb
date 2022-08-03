@@ -1,22 +1,12 @@
-<h1>Job Applications for <%= @job_post.title %></h1>
+<h1>Job applications for <%= @job_post.title %></h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Body</th>
-      <th>Applicant</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
+<div id="job_applications">
+  <% @job_applications.each do |job_application| %>
+    <%= render job_application %>
+    <p>
+      <%= link_to "Show this job application", job_post_job_application_path(@job_post, job_application) %>
+    </p>
+  <% end %>
+</div>
 
-  <tbody>
-    <% @job_applications.each do |job_application| %>
-      <tr>
-        <td><%= job_application.body %></td>
-        <td><%= job_application.user.email %></td>
-        <td><%= link_to 'Show', job_post_job_application_path(@job_post, job_application) %></td>
-        <td><%= link_to 'Destroy', job_post_job_application_path(@job_post, job_application), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= link_to "Back to job posts", job_posts_path %>
